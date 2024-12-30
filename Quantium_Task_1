@@ -1,0 +1,299 @@
+##Quantium Task 1 Solution
+#loading packages
+library("tidyverse")
+library("skimr")
+library("janitor")
+library("readxl")
+library("data.table")
+library("ggmosaic")
+
+#loading the datasets
+transaction_data <- read_excel('QVI_transaction_data.xlsx')
+View(transaction_data)
+purchase_behaviour <- read.csv('QVI_purchase_behaviour.csv')
+View(purchase_behaviour)
+
+#viewing the data- transaction_data
+str(transaction_data)
+skim_without_charts(transaction_data)
+colnames(transaction_data)
+glimpse(transaction_data)
+head(transaction_data)
+
+#viewing the data- purchase behaviour
+str(purchase_behaviour)
+head(purchase_behaviour)
+skim_without_charts(purchase_behaviour)
+colnames(purchase_behaviour)
+glimpse(purchase_behaviour)
+
+#cleaning the names
+transaction_data <- clean_names(transaction_data)
+View(transaction_data)
+purchase_behaviour <- clean_names(purchase_behaviour)
+View(purchase_behaviour)
+
+#changing the date format
+transaction_data$date <- as.Date(transaction_data$date, origin = "1899-12-30")
+View(transaction_data)
+
+#checking for number of rows associated with the prod_name
+transaction_data <- data.table(transaction_data)
+transaction_data[,.N, by = .(prod_name)]
+
+#creating a product_info subset consisting of prod_name and prod_nbr
+product_info <- data.table(unique(transaction_data$prod_name),
+                           unique(transaction_data$prod_nbr))
+View(product_info)
+
+#changing the name
+product_info <- as.data.frame(product_info)
+product_info <- rename(product_info, prod_name = V1, prod_nbr = V2)
+View(product_info)
+product_info <- data.table(product_info)
+
+#arranging the product_info in ascending order
+product_info <- product_info %>%
+  arrange(prod_nbr)
+
+View(product_info)
+
+#removing numbers and extra spaces
+#on transaction_data
+transaction_data$prod_name <- substr(transaction_data$prod_name, 1, nchar(transaction_data$prod_name))
+transaction_data$prod_name <- gsub("\\s+"," ", transaction_data$prod_name)
+
+View(transaction_data)
+
+#on product_info
+product_info$prod_name <- substr(product_info$prod_name, 1, nchar(product_info$prod_name))
+product_info$prod_name <- gsub("\\s+"," ", product_info$prod_name)
+
+View(product_info)
+
+#removing the salsa values- to check the prod_nbr of the salsa string
+result <- product_info[grep("salsa", prod_name, ignore.case = TRUE), prod_nbr]
+print(result)
+
+#filtering the data with salsa
+#product_info
+product_info <- filter(product_info, prod_nbr != 35, prod_nbr != 39, prod_nbr != 41, prod_nbr != 57,
+                                prod_nbr != 59, prod_nbr != 64, prod_nbr != 65, prod_nbr != 76, prod_nbr != 101)
+
+View(product_info)
+
+#transaction_data
+transaction_data <- filter(transaction_data, prod_nbr != 35, prod_nbr != 39, prod_nbr != 41, prod_nbr != 57,
+                           prod_nbr != 59, prod_nbr != 64, prod_nbr != 65, prod_nbr != 76, prod_nbr != 101)
+
+View(transaction_data)
+
+#summary of the data
+summary(transaction_data)
+
+#outlier spotted
+transaction_data[transaction_data$prod_qty == 200]
+
+#check if the customer had any other transaction
+which(grepl(226000, transaction_data$lylty_card_nbr))
+
+#filtering the data
+transaction_data <- filter(transaction_data, lylty_card_nbr != 226000)
+View(transaction_data)
+
+summary(transaction_data)
+
+#count the number of transactions by date
+tab <- table(cut(transaction_data$date, "day"))
+transaction_by_day <- data.frame(tab)
+View(transaction_by_day)
+transaction_by_day <- transaction_by_day %>%
+  rename(DATE = Var1, N = Freq)
+View(transaction_by_day)
+
+transaction_by_day$DATE <- as.Date(transaction_by_day$DATE)
+View(transaction_by_day)
+summary(transaction_by_day$N)
+str(transaction_by_day)
+
+#plot themes to format the graphs
+ggplot(data = transaction_by_day, aes(x = DATE, y = N))+
+  geom_line(color = "blue", size = 1) +
+  labs(title = "Transaction over time", x = "Date", y = "Frequency") +
+  scale_x_date(breaks = "1 month")
+
+#plot themes of individual dates to check for outliers
+ggplot(data = transaction_by_day[transaction_by_day$DATE >= "2018-12-01" & transaction_by_day$DATE <= "2018-12-31", ]) +
+  geom_line(mapping = aes(x = DATE, y = N), color = "blue", size = 1) +
+  labs(title = "Trasnaction over time", x = "Date", y ="Frequency") +
+  scale_x_date(breaks = "1 day")
+
+#create a brand coloum from the prod_name
+product_info$brand <- gsub("([A-Za-z]+).*", "\\1", product_info$prod_name)
+head(product_info$brand,10)
+pack <- function(x,n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+product_info$pack_size <- pack(product_info$prod_name, 4)
+product_info$pack_size <- substr(product_info$pack_size, 1, nchar(product_info$pack_size)-1)
+product_info$pack_size <- as.numeric(product_info$pack_size)
+
+View(product_info)
+#occurences of brand
+product_info[, .N, by = brand][order(-N)]
+
+#checking the brand names if they are correct or not
+product_info[brand == "Red", brand := "RRD"]
+product_info[brand == "Snbts", brand := "Sunbites"]
+product_info[brand == "Infzns", brand := "Infuzions"]
+product_info[brand == "WW", brand := "Woolworths"]
+product_info[brand == "Smith", brand := "Smiths"]
+product_info[brand == "NCC", brand := "Natural"]
+product_info[brand == "Dorito", brand := "Doritos"]
+product_info[brand == "Grain", brand := "GrnWves"]
+product_info[, .N, by = brand][order(-N)]
+
+#brand names in the transaction_data
+transaction_data$brand <- gsub("([A-Za-z]+).*", "\\1", transaction_data$prod_name)
+transaction_data$pack_size <- pack(transaction_data$prod_name,4)
+transaction_data$pack_size <- substr(transaction_data$pack_size, 1, nchar(transaction_data$pack_size)-1)
+transaction_data$pack_size <- as.numeric(transaction_data$pack_size)
+
+View(transaction_data)
+
+#checking the occurences by brand
+transaction_data[, .N, by = brand][order(-N)]
+
+#changing the brand name
+transaction_data[brand == "Red", brand := "RRD"]
+transaction_data[brand == "Snbts", brand := "Sunbites"]
+transaction_data[brand == "Infzns", brand := "Infuzions"]
+transaction_data[brand == "WW", brand := "Woolworths"]
+transaction_data[brand == "Smith", brand := "Smiths"]
+transaction_data[brand == "NCC", brand := "Natural"]
+transaction_data[brand == "Dorito", brand := "Doritos"]
+transaction_data[brand == "Grain", brand := "GrnWves"]
+transaction_data[, .N, by = brand][order(-N)]
+
+#checking the colnames
+colnames(transaction_data)
+
+#transaction data column selection
+transaction_data <- transaction_data[, c(1,2,3,4,5,6,9,10,7,8)]
+View(transaction_data)
+
+#analysing the purchase behaviour data
+str(purchase_behaviour)
+purchase_behaviour <- as.data.table(purchase_behaviour)
+
+#counting the unique occurances of the purchase behaviour data
+purchase_behaviour[,.N, by = lifestage][order(N)]
+
+#plotting the data to get the purchase_behaviour data
+ggplot(data = purchase_behaviour[,.N,by = lifestage][order(N)], aes(x = lifestage, y = N)) +
+         geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Number of customers on each lifestage", x = "Life Stage", y = "Number of customers") 
+
+#counting the unique occcurance of the purchase_behaviour data by premium_customers
+View(purchase_behaviour)
+purchase_behaviour[, .N, by = premium_customer][order(N)]
+
+#plotting the data according to the premium_customer
+ggplot(data = purchase_behaviour[,.N, by = premium_customer][order(N)], aes(x= premium_customer, y = N))+
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Number of customers on premium_customer", x = "Premium Customer", y = "Number of customers")
+
+#merging the two datasets
+data <- merge(transaction_data, purchase_behaviour, all.x = TRUE)
+View(data)
+
+#checking for null values
+data[is.null(lifestage), .N]
+data[is.null(premium_customer), .N]
+
+#data analysis on customer segment data
+sales <- data[,.(sales = sum(tot_sales)), .(lifestage, premium_customer)]
+View(sales)
+
+#plotting the graph
+p <- ggplot(data = sales) +
+  geom_mosaic(mapping = aes(weight = sales, x = product(premium_customer, lifestage),
+                            fill = premium_customer)) +
+  labs(title = "Proportion of sales", x = "Lifestage", y = "Premium Customer")
+
+#adding the text
+p + geom_text(data = ggplot_build(p)$data[[1]], aes((xmin + xmax)/2, (ymin + ymax)/2,
+                                                    label = as.character(paste(round(.wt/sum(.wt),3)*100, '%'))))
+
+#plotting the data to know how many customers are their in each segment
+customers <- data[, .(customers = uniqueN(lylty_card_nbr)), .(lifestage, premium_customer)]
+View(customers)
+
+#plotting the graph
+p1 <- ggplot(data = customers) +
+  geom_mosaic(mapping = aes(weight = customers, x = product(premium_customer, lifestage),
+                            fill = premium_customer)) +
+  labs(title = "Customers in each segment", x = "Lifestage", y = "Premium Customers")
+
+#adding the text to the graph
+p1 + geom_text(data = ggplot_build(p1)$data[[1]], aes((xmin + xmax)/2, (ymin + ymax)/2,
+               label = as.character(paste(round(.wt/sum(.wt),3)*100, '%'))))
+
+##plotting the data- to know how many chips are brought per customer by segment
+avg_units <- data[, .(AVG = sum(prod_qty)/uniqueN(lylty_card_nbr)), .(lifestage, premium_customer)]
+View(avg_units)
+
+#plotting the graph
+p2 <- ggplot(data = avg_units, aes(weight = AVG, x = lifestage, fill = premium_customer)) +
+  geom_bar(position = position_dodge()) + 
+  labs(title = "Chips brought per customer by segment", x = "Lifestage", y = "Average units per transaction")
+
+#data to know average chip price by customer segment
+avg_chip_price <- data[, .(AVG_V1 = sum(tot_sales)/sum(prod_qty)), .(lifestage, premium_customer)]
+View(avg_chip_price)
+
+#plotting the graph
+p3 <- ggplot(data = avg_chip_price, aes(weight = AVG_V1, x = lifestage, fill = premium_customer)) +
+  geom_bar(position = position_dodge()) +
+  labs(title = "Average chip price by customer segment", x = "Lifestage", y = "Avg chip price")
+
+#price per unit data plot
+price_per_unit <- data[, price := tot_sales/prod_qty]
+View(price_per_unit)
+
+#plotting the graph to know average price range of chip
+hist(price_per_unit[,price], main = "Price Per Unit", xlab = "Price", ylab = "Black", col = "deepskyblue3")
+
+#performing t-test to know mainstream vs budget and premium of midage and young singles and couples
+t.test(data[lifestage %in% c("YOUNG SINGLES/COUPLES","MIDAGE SINGLES/COUPLES") & premium_customer == "Mainstream", price],
+       data[lifestage %in% c("YOUNG SINGLES/COUPLES","MIDAGE SINGLES/COUPLES") & premium_customer != "Mainstream", price],
+       alternative = "greater")
+
+#deep dive into brand loyalty of customers
+segment_1 <- data[lifestage == "YOUNG SINGLES/COUPLES" & premium_customer == "Mainstream", ]
+View(segment_1)
+other <- data[!(lifestage == "YOUNG SINGLES/COUPLES" & premium_customer == "Mainstream"), ]
+View(other)
+
+#calculate the quantity brought by each segment
+quantity_segment1 <- segment1[,sum(prod_qty)]
+quantity_other <- other[,sum(prod_qty)]
+
+#calculate the brand preferences
+brand_preferences_segment1 <- segment_1[, .(targetSegment = sum(prod_qty)/quantity_segment1), by = brand]
+brand_preferences_other <- other[,.(other = sum(prod_qty)/quantity_other), by = brand] 
+
+#checking the brand proportions
+brand_proportions <- merge(brand_preferences_segment1, brand_preferences_other)[, affinityToBrand := targetSegment/other]
+brand_proportions[order(-affinityToBrand)]
+
+#calculate the prefered pack_size
+pack_preferences <- segment_1[,.(targetSegment = sum(prod_qty)/quantity_segment1), by = pack_size]
+pack_preferences_v1 <- other[,.(other = sum(prod_qty)/quantity_other), by = pack_size]
+
+#checking the pack preferences
+pack_size_preference <- merge(pack_preferences, pack_preferences_v1)[, affinityToPack := targetSegment/other]
+pack_size_preference[order(-affinityToPack)]
+
+#checking the data
+data[pack_size == 270, unique(prod_name)]
