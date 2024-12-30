@@ -27,6 +27,7 @@ A detailed examination of purchase volumes showed varying patterns across the se
 The average price per unit was higher for Mainstream - young and mid-age singles and couples compared to Budget and Premium counterparts. This suggests that these customers are willing to pay more per packet of chips.
 
 * Statistical Analysis of Price Differences
+
 To further validate the findings regarding price differences, a t-test was conducted to compare the average unit prices between the Mainstream - young and mid-age singles and couples segment and the Budget and Premium - young and mid-age singles and couples segments. The t-test results indicated a p-value < 2.2e-16, which confirms that the unit price for the Mainstream segment is statistically significantly higher than for the other segments. This reinforces the observation that Mainstream customers are more willing to pay a premium for chips compared to those in the Budget or Premium segments.
 
 # Deep dive into specific customer segments for insights 
