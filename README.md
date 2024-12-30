@@ -12,4 +12,5 @@ Files: Quantium_Task_1, reads QVI_purchase_behaviour.csv and QVI_transaction_dat
   2.  How many customers are in each segment?
   3.  How many chips are brought per customer by segment?
   4.  What's the average chip price by customer segment?
+After calculating the total sales by Lifestage and Premium_Customer and plotting these segments, found that Sales are coming mainly from Budget- older families, Mainstream- young singles/couples, and Mainstream retirees.  The high sales amount by segment
 
