@@ -56,5 +56,5 @@ Additionally, **Mainstream - Young Singles/Couples** customers tend to pay more 
 
 ### Recommendation
 
-By understanding these preferences, we can more effectively target the **Mainstream - Young Singles/Couples** segment, optimizing product offerings to align with their purchasing habits and drive both retention and growth in sales. The Category Manager may consider boosting the category’s performance by strategically placing Tyrrells and smaller packs of chips in high-traffic, discretionary spaces near areas frequented by young singles and couples. This placement would enhance visibility and encourage impulse purchases, potentially driving increased sales in these segments.
+By understanding these preferences, we can more effectively target the **Mainstream - Young Singles/Couples** segment, optimizing product offerings to align with their purchasing habits and drive both retention and growth in sales. The Category Manager should consider boosting the category’s performance by strategically placing Tyrrells and smaller packs of chips in high-traffic, discretionary spaces near areas frequented by young singles and couples. This placement would enhance visibility and encourage impulse purchases, potentially driving increased sales in these segments.
 
