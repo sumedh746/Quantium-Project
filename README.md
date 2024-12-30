@@ -6,12 +6,12 @@ This experience program focused on analyzing chip purchases in retail giants to 
 
 # Task 1- Data Preparation and Customer Analytics
 In Task 1, the focus was on analyzing customer behavior about chips purchases. The following data-cleaning steps were undertaken:
-
 * Standardization: Column names were standardized, and date values were reformatted for consistency.
-Data Filtering: Entries related to salsa products were excluded from the dataset.
-Outlier Removal: Outliers were identified and removed to ensure data accuracy.
-Brand Name Correction: A new column, "Brand," was added, derived from the prod_name field. Inconsistencies in brand names were corrected, merging pairs like "Snbts" to "Sunbites" and "Infzns" to "Infuzions".
-* Customer Segmentation Analysis
+* Data Filtering: Entries related to salsa products were excluded from the dataset.
+* Outlier Removal: Outliers were identified and removed to ensure data accuracy.
+* Brand Name Correction: A new column, "Brand," was added, derived from the prod_name field. Inconsistencies in brand names were corrected, merging pairs like "Snbts" to "Sunbites" and "Infzns" to "Infuzions".
+  
+* Customer Segmentation Analysis.
 The analysis aimed to answer four key questions about customer segments:
 
 1. Who spends the most on chips?
