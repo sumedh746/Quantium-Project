@@ -20,16 +20,31 @@ The analysis examined customer behavior by life stage and premium purchase statu
 2. How many customers are in each segment?
 This analysis provided insights into the distribution of customers across various segments, highlighting the size and purchasing habits of each.
 
-3. How many chips are purchased per customer by segment?
+4. How many chips are purchased per customer by segment?
 A detailed examination of purchase volumes showed varying patterns across the segments, with some groups purchasing more chips than others.
 
-4. What’s the average chip price by customer segment?
+5. What’s the average chip price by customer segment?
 The average price per unit was higher for Mainstream - young and mid-age singles and couples compared to Budget and Premium counterparts. This suggests that these customers are willing to pay more per packet of chips.
 
 * Statistical Analysis of Price Differences
 
 To further validate the findings regarding price differences, a t-test was conducted to compare the average unit prices between the Mainstream - young and mid-age singles and couples segment and the Budget and Premium - young and mid-age singles and couples segments. The t-test results indicated a p-value < 2.2e-16, which confirms that the unit price for the Mainstream segment is statistically significantly higher than for the other segments. This reinforces the observation that Mainstream customers are more willing to pay a premium for chips compared to those in the Budget or Premium segments.
 
-# Deep dive into specific customer segments for insights 
-We wanted to target customer segments that contribute the most to sales to retain them or further increase sales. For that we took a deeper look at Mainstream- Young Singles/Couples. 
+# Customer Segment Analysis: Mainstream - Young Singles/Couples
+
+To retain and further increase sales from high-contributing customer segments, we conducted an in-depth analysis of the **Mainstream - Young Singles/Couples** segment. The aim was to identify whether this segment shows a preference for specific chip brands or pack sizes. The key findings are as follows:
+
+### Key Findings
+
+- **Tyrrells Preference**: Customers in the **Mainstream - Young Singles/Couples** segment are **23% more likely** to purchase **Tyrrells** chips compared to the rest of the population.
+- **Burger Rings Disinterest**: This segment is **56% less likely** to purchase **Burger Rings** compared to other customer groups.
+- **Pack Size Preference**: Customers in this segment are **27% more likely** to purchase a **270g pack** of chips. Since **Twisties** is the only brand offering 270g packs, this indicates a higher likelihood of purchasing **Twisties** among this segment.
+
+### Impulsive Purchasing Behavior
+
+Additionally, **Mainstream - Young Singles/Couples** customers tend to pay more per packet of chips, reflecting more impulsive purchasing behavior. Their increased willingness to spend aligns with their higher likelihood of purchasing **Tyrrells** chips, which is **23% greater** than the general population.
+
+### Conclusion
+
+By understanding these preferences, we can more effectively target the **Mainstream - Young Singles/Couples** segment, optimizing product offerings to align with their purchasing habits and drive both retention and growth in sales. The Category Manager may consider boosting the category’s performance by strategically placing Tyrrells and smaller packs of chips in high-traffic, discretionary spaces near areas frequented by young singles and couples. This placement would enhance visibility and encourage impulse purchases, potentially driving increased sales in these segments.
 
